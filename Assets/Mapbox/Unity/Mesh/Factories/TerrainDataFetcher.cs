@@ -15,10 +15,6 @@ public class DataFetcherParameters
 	public UnityTile tile;
 }
 
-public class ImageDataFetcherParameters : DataFetcherParameters
-{
-	public bool useRetina = true;
-}
 
 public class TerrainDataFetcherParameters : DataFetcherParameters
 {

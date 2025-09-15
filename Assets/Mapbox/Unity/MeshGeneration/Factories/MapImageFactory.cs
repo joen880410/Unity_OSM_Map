@@ -1,20 +1,11 @@
 namespace Mapbox.Unity.MeshGeneration.Factories
 {
-	using System;
-	using Mapbox.Map;
-	using UnityEngine;
-	using Mapbox.Unity.MeshGeneration.Enums;
-	using Mapbox.Unity.MeshGeneration.Data;
-	using Mapbox.Unity.Utilities;
-	using Mapbox.Unity.Map;
-	using System.Collections.Generic;
+    using Mapbox.Map;
+    using UnityEngine;
+    using Mapbox.Unity.MeshGeneration.Enums;
+    using Mapbox.Unity.MeshGeneration.Data;
+    using Mapbox.Unity.Map;
 
-	public enum MapImageType
-	{
-		BasicMapboxStyle,
-		Custom,
-		None
-	}
 
 	/// <summary>
 	/// Uses raster image services to create materials & textures for terrain
@@ -23,27 +14,25 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 	public class MapImageFactory : AbstractTileFactory
 	{
 		[SerializeField]
-		ImageryLayerProperties _properties;
-		protected ImageDataFetcher DataFetcher;
+        public ImageryRasterOptions rasterOptions = new ImageryRasterOptions();
+        public LayerSourceOptions sourceOptions = new LayerSourceOptions()
+        {
+            isActive = true,
+            layerSource = MapboxDefaultImagery.GetParameters(ImagerySourceType.MapboxStreets)
+        };
 
-		public ImageryLayerProperties Properties
+        protected ImageDataFetcher DataFetcher;
+
+        public string TilesetId
 		{
 			get
 			{
-				return _properties;
-			}
-		}
-
-		public string TilesetId
-		{
-			get
-			{
-				return _properties.sourceOptions.Id;
+				return sourceOptions.Id;
 			}
 
 			set
 			{
-				_properties.sourceOptions.Id = value;
+				sourceOptions.Id = value;
 			}
 		}
 
@@ -68,7 +57,7 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
 				if (tile.RasterDataState != TilePropertyState.Unregistered)
 				{
-					tile.SetRasterData(rasterTile.Data, _properties.rasterOptions.useMipMap, _properties.rasterOptions.useCompression);
+					tile.SetRasterData(rasterTile.Data, rasterOptions.useMipMap, rasterOptions.useCompression);
 				}
 			}
 		}
@@ -97,35 +86,17 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 			DataFetcher.FetchingError += OnDataError;
 		}
 
-		public override void SetOptions(LayerProperties options)
-		{
-			_properties = (ImageryLayerProperties)options;
-		}
 
 		protected override void OnRegistered(UnityTile tile)
 		{
-			if (_properties.sourceType == ImagerySourceType.None)
-			{
-				tile.SetRasterData(null);
-				tile.RasterDataState = TilePropertyState.None;
-				return;
-			}
-			else
-			{
 				tile.RasterDataState = TilePropertyState.Loading;
-				if (_properties.sourceType != ImagerySourceType.Custom)
-				{
-					_properties.sourceOptions.layerSource = MapboxDefaultImagery.GetParameters(_properties.sourceType);
-				}
-				ImageDataFetcherParameters parameters = new ImageDataFetcherParameters()
+                DataFetcherParameters parameters = new DataFetcherParameters()
 				{
 					canonicalTileId = tile.CanonicalTileId,
 					tile = tile,
 					tilesetId = TilesetId,
-					useRetina = _properties.rasterOptions.useRetina
 				};
 				DataFetcher.FetchData(parameters);
-			}
 		}
 
 		/// <summary>

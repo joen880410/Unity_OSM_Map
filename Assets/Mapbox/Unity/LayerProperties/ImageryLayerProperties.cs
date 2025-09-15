@@ -9,13 +9,9 @@
 	{
 		public ImagerySourceType sourceType = ImagerySourceType.MapboxStreets;
 
-		public LayerSourceOptions sourceOptions = new LayerSourceOptions()
-		{
-			isActive = true,
-			layerSource = MapboxDefaultImagery.GetParameters(ImagerySourceType.MapboxStreets)
-		};
+		
 
-		public ImageryRasterOptions rasterOptions = new ImageryRasterOptions();
+		
 
 		public override bool NeedsForceUpdate()
 		{

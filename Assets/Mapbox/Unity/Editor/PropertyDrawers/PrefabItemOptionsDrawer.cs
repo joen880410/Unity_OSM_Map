@@ -150,13 +150,6 @@ namespace Mapbox.Editor
 				{
 					EditorHelper.CheckForModifiedProperty(property, true);
 				}
-				// draw search button.
-				if (GUILayout.Button(new GUIContent(searchButtonContent), (GUIStyle)"minibuttonleft", GUILayout.MaxWidth(100)))
-				{
-					object propertyObject = EditorHelper.GetTargetObjectOfProperty(property);
-					GeocodeAttributeSearchWindow.Open(coordinate, propertyObject);
-				}
-
 				//include a remove button in the row
 				if (GUILayout.Button(new GUIContent(" X "), (GUIStyle)"minibuttonright", GUILayout.MaxWidth(30)))
 				{
