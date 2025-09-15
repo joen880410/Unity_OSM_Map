@@ -110,20 +110,6 @@ namespace Mapbox.Unity.Map
         }
 
 
-        /// <summary>
-        /// The vector data.
-        /// Options to control the vector data component of the map.
-        /// Adds a vector source and visualizers to define the rendering behaviour of vector data layers.
-        /// </summary>
-        [NodeEditorElement("Layers")]
-        public IVectorDataLayer VectorData
-        {
-            get
-            {
-                return _vectorData;
-            }
-        }
-
         public Vector2d CenterLatitudeLongitude
         {
             get
@@ -477,11 +463,6 @@ namespace Mapbox.Unity.Map
         {
             _elevationFactory = ScriptableObject.CreateInstance<TerrainFactoryBase>();
             SetTileProvider();
-
-            if (_imagery == null)
-            {
-                _imagery = new ImageryLayer();
-            }
             _imagery.Initialize();
 
 
@@ -495,7 +476,7 @@ namespace Mapbox.Unity.Map
             {
                 _elevationFactory,
                 _imagery.Factory,
-                _vectorData.Factory
+                //_vectorData.Factory
             };
 
             InitializeMap();
@@ -652,7 +633,6 @@ namespace Mapbox.Unity.Map
         {
             _mapVisualizer.UnregisterTilesFrom(_vectorData.Factory);
             _vectorData.UnbindAllEvents();
-            _vectorData.UpdateFactorySettings();
             _mapVisualizer.ReregisterTilesTo(_vectorData.Factory);
         }
 

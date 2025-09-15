@@ -1,14 +1,11 @@
-﻿using Mapbox.Unity.MeshGeneration.Data;
-
-namespace Mapbox.Unity.Map
+﻿namespace Mapbox.Unity.Map
 {
     using System;
     using UnityEngine;
     using Mapbox.Unity.MeshGeneration.Factories;
-    using Mapbox.Unity.Utilities;
 
     [Serializable]
-    public class ImageryLayer : AbstractLayer, IImageryLayer
+    public class ImageryLayer : AbstractLayer
     {
         [Tooltip("Use Unity compression for the tile texture.")]
         public bool useCompression = false;
@@ -17,12 +14,6 @@ namespace Mapbox.Unity.Map
         public void Initialize()
         {
             _imageFactory = ScriptableObject.CreateInstance<MapImageFactory>();
-            //_imageFactory.SetOptions(_layerProperty);
-        }
-
-        public void RedrawLayer(object sender, System.EventArgs e)
-        {
-            NotifyUpdateLayer(_imageFactory, sender as MapboxDataProperty, false);
         }
 
         private MapImageFactory _imageFactory;
@@ -59,22 +50,6 @@ namespace Mapbox.Unity.Map
             }
         }
 
-        /// <summary>
-        /// Change image layer settings.
-        /// </summary>
-        /// <param name="imageSource">Data source for the image provider.</param>
-        /// <param name="useRetina">Enable/Disable high quality imagery.</param>
-        /// <param name="useCompression">Enable/Disable Unity3d Texture2d image compression.</param>
-        /// <param name="useMipMap">Enable/Disable Unity3d Texture2d image mipmapping.</param>
-        public virtual void SetProperties(bool useCompression, bool useMipMap)
-        {
-
-            if (this.useCompression != useCompression || this.useMipMap != useMipMap)
-            {
-                this.useCompression = useCompression;
-                this.useMipMap = useMipMap;
-            }
-        }
         #endregion
     }
 }
