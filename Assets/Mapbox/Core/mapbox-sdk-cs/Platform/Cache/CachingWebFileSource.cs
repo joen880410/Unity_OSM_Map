@@ -18,18 +18,14 @@
 #endif
 		private bool _disposed;
 		private List<ICache> _caches = new List<ICache>();
-		private string _accessToken;
-		private Func<string> _getMapsSkuToken;
 		private bool _autoRefreshCache;
 
 
-		public CachingWebFileSource(string accessToken, Func<string> getMapsSkuToken, bool autoRefreshCache)
+		public CachingWebFileSource( bool autoRefreshCache)
 		{
 #if MAPBOX_DEBUG_CACHE
 			_className = this.GetType().Name;
 #endif
-			_accessToken = accessToken;
-			_getMapsSkuToken = getMapsSkuToken;
 			_autoRefreshCache = autoRefreshCache;
 		}
 

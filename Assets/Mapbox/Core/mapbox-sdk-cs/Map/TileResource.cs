@@ -7,7 +7,6 @@ namespace Mapbox.Map
 {
     using Platform;
     using System;
-    using Mapbox.Unity.Telemetry;
     using UnityEngine;
 
     public sealed class TileResource : IResource
