@@ -32,7 +32,6 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 	/// </summary>
 	public abstract class AbstractTileFactory : ScriptableObject
 	{
-		protected IFileSource _fileSource;
 
 		protected LayerProperties _options;
 
@@ -58,9 +57,8 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 			}
 		}
 
-		public virtual void Initialize(IFileSource fileSource)
+		public virtual void Initialize()
 		{
-			_fileSource = fileSource;
 			_tilesWaitingResponse = new HashSet<UnityTile>();
 			_tilesWaitingProcessing = new HashSet<UnityTile>();
 			OnInitialized();

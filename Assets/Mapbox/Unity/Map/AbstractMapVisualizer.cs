@@ -72,7 +72,7 @@ namespace Mapbox.Unity.Map
 		/// Initializes the factories by passing the file source down, which is necessary for data (web/file) calls
 		/// </summary>
 		/// <param name="fileSource"></param>
-		public virtual void Initialize(IMapReadable map, IFileSource fileSource)
+		public virtual void Initialize(IMapReadable map)
 		{
 			_map = map;
 			_tileProgress = new Dictionary<UnwrappedTileId, int>();
@@ -94,7 +94,7 @@ namespace Mapbox.Unity.Map
 				}
 				else
 				{
-					factory.Initialize(fileSource);
+					factory.Initialize();
 					UnregisterEvents(factory);
 					RegisterEvents(factory);
 				}

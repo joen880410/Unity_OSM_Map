@@ -17,45 +17,28 @@
 	public static class EditorHelper
 	{
 
-		[UnityEditor.Callbacks.DidReloadScripts]
-		private static void OnScriptsReloaded()
-		{
-			if (Application.isEditor)
-			{
-				AbstractMap abstractMap = UnityEngine.Object.FindObjectOfType<AbstractMap>();
+		//[UnityEditor.Callbacks.DidReloadScripts]
+		//private static void OnScriptsReloaded()
+		//{
+		//	if (Application.isEditor)
+		//	{
+		//		AbstractMap abstractMap = UnityEngine.Object.FindObjectOfType<AbstractMap>();
 
-				if (abstractMap == null)
-				{
-					return;
-				}
+		//		if (abstractMap == null)
+		//		{
+		//			return;
+		//		}
 
-				UnityTile[] unityTiles = abstractMap.GetComponentsInChildren<UnityTile>();
+		//		UnityTile[] unityTiles = abstractMap.GetComponentsInChildren<UnityTile>();
 
-				for (int i = 0; i < unityTiles.Length; i++)
-				{
-					UnityEngine.Object.DestroyImmediate(unityTiles[i].gameObject);
-				}
+		//		for (int i = 0; i < unityTiles.Length; i++)
+		//		{
+		//			UnityEngine.Object.DestroyImmediate(unityTiles[i].gameObject);
+		//		}
 
-				abstractMap.DestroyChildObjects();
-				if (EditorApplication.isPlaying)
-				{
-					abstractMap.ResetMap();
-					return;
-				}
-				if (abstractMap.IsEditorPreviewEnabled == true)
-				{
-					if (EditorApplication.isPlayingOrWillChangePlaymode)
-					{
-						return;
-					}
-					else
-					{
-						abstractMap.DisableEditorPreview();
-						abstractMap.EnableEditorPreview();
-					}
-				}
-			}
-		}
+		//		abstractMap.DestroyChildObjects();
+		//	}
+		//}
 
 
 		public static void CheckForModifiedProperty<T>(SerializedProperty property, T targetObject, bool forceHasChanged = false)
