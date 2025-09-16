@@ -110,7 +110,6 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 			VectorLayerUpdateArgs layerUpdateArgs = eventArgs as VectorLayerUpdateArgs;
 
 			layerUpdateArgs.visualizer = this;
-			layerUpdateArgs.effectsVectorLayer = true;
 
 			if (layerUpdateArgs.modifier != null)
 			{

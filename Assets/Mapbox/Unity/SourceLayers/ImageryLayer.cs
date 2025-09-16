@@ -5,7 +5,7 @@
     using Mapbox.Unity.MeshGeneration.Factories;
 
     [Serializable]
-    public class ImageryLayer : AbstractLayer
+    public class ImageryLayer 
     {
         [Tooltip("Use Unity compression for the tile texture.")]
         public bool useCompression = true;

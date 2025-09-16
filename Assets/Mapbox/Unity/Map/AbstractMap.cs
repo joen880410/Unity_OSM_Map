@@ -383,7 +383,7 @@ namespace Mapbox.Unity.Map
         public void Awake()
         {
             MapOnAwakeRoutine();
-            
+
         }
         public void Start()
         {
@@ -426,7 +426,6 @@ namespace Mapbox.Unity.Map
 
         public void DisableEditorPreview()
         {
-            _imagery.UpdateLayer -= OnImageOrTerrainUpdateLayer;
             if (_mapVisualizer != null)
             {
                 _mapVisualizer.ClearMap();
@@ -463,7 +462,6 @@ namespace Mapbox.Unity.Map
             {
                 _elevationFactory,
                 _imagery.Factory,
-                //_vectorData.Factory
             };
 
             InitializeMap();
@@ -471,7 +469,7 @@ namespace Mapbox.Unity.Map
 
         protected virtual void TileProvider_OnTileAdded(UnwrappedTileId tileId)
         {
-            var tile = _mapVisualizer.LoadTile(tileId);
+            _mapVisualizer.LoadTile(tileId);
         }
 
         protected virtual void TileProvider_OnTileRemoved(UnwrappedTileId tileId)
@@ -501,7 +499,6 @@ namespace Mapbox.Unity.Map
             _initialZoom = (int)zoom;
             SetUpScaling();
             //Set up events for changes.
-            _imagery.UpdateLayer += OnImageOrTerrainUpdateLayer;
             _mapVisualizer.Initialize(this);
             TileProvider.Initialize(this);
             SendInitialized();
@@ -595,62 +592,6 @@ namespace Mapbox.Unity.Map
         private void OnMapExtentChanged(object sender, ExtentArgs currentExtent)
         {
             TriggerTileRedrawForExtent(currentExtent);
-        }
-
-        private void OnImageOrTerrainUpdateLayer(object sender, System.EventArgs eventArgs)
-        {
-            LayerUpdateArgs layerUpdateArgs = eventArgs as LayerUpdateArgs;
-            if (layerUpdateArgs != null)
-            {
-                _mapVisualizer.UpdateTileForProperty(layerUpdateArgs.factory, layerUpdateArgs);
-                if (layerUpdateArgs.effectsVectorLayer)
-                {
-                    RedrawVectorDataLayer();
-                }
-                OnMapRedrawn();
-            }
-        }
-
-        private void RedrawVectorDataLayer()
-        {
-            
-        }
-
-        private void OnVectorDataSubLayerRemoved(object sender, EventArgs eventArgs)
-        {
-            VectorLayerUpdateArgs layerUpdateArgs = eventArgs as VectorLayerUpdateArgs;
-
-            if (layerUpdateArgs.visualizer != null)
-            {
-                _mapVisualizer.RemoveTilesFromLayer((VectorTileFactory)layerUpdateArgs.factory, layerUpdateArgs.visualizer);
-            }
-            OnMapRedrawn();
-        }
-
-        private void OnVectorDataSubLayerAdded(object sender, EventArgs eventArgs)
-        {
-            RedrawVectorDataLayer();
-            OnMapRedrawn();
-        }
-
-        private void OnVectorDataUpdateLayer(object sender, System.EventArgs eventArgs)
-        {
-
-            VectorLayerUpdateArgs layerUpdateArgs = eventArgs as VectorLayerUpdateArgs;
-
-            if (layerUpdateArgs.visualizer != null)
-            {
-                //We have a visualizer. Update only the visualizer.
-                //No need to unload the entire factory to apply changes.
-                _mapVisualizer.UnregisterAndRedrawTilesFromLayer((VectorTileFactory)layerUpdateArgs.factory, layerUpdateArgs.visualizer);
-            }
-            else
-            {
-                //We are updating a core property of vector section.
-                //All vector features need to get unloaded and re-created.
-                RedrawVectorDataLayer();
-            }
-            OnMapRedrawn();
         }
 
         private void OnTileProviderChanged()
