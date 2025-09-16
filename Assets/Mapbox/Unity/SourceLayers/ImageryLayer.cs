@@ -8,9 +8,9 @@
     public class ImageryLayer : AbstractLayer
     {
         [Tooltip("Use Unity compression for the tile texture.")]
-        public bool useCompression = false;
+        public bool useCompression = true;
         [Tooltip("Use texture with Unity generated mipmaps.")]
-        public bool useMipMap = false;
+        public bool useMipMap = true;
         public void Initialize()
         {
             _imageFactory = ScriptableObject.CreateInstance<MapImageFactory>();

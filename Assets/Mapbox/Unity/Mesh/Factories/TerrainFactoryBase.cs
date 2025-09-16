@@ -59,33 +59,10 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
         protected override void OnRegistered(UnityTile tile)
         {
-            if (Properties.sourceType == ElevationSourceType.None)
-            {
-                tile.SetHeightData(null);
-                tile.MeshFilter.sharedMesh.Clear();
-                tile.ElevationType = TileTerrainType.None;
-                tile.HeightDataState = TilePropertyState.None;
-                return;
-            }
-
-            if (Strategy is IElevationBasedTerrainStrategy)
-            {
-                tile.HeightDataState = TilePropertyState.Loading;
-                TerrainDataFetcherParameters parameters = new TerrainDataFetcherParameters()
-                {
-                    canonicalTileId = tile.CanonicalTileId,
-                    tilesetId = _elevationOptions.sourceOptions.Id,
-                    tile = tile
-                };
-                DataFetcher.FetchData(parameters);
-            }
-            else
-            {
-                //reseting height data
-                tile.SetHeightData(null);
-                Strategy.RegisterTile(tile);
-                tile.HeightDataState = TilePropertyState.Loaded;
-            }
+            //reseting height data
+            tile.SetHeightData(null);
+            Strategy.RegisterTile(tile);
+            tile.HeightDataState = TilePropertyState.Loaded;
         }
 
         protected override void OnUnregistered(UnityTile tile)

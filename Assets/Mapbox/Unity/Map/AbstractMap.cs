@@ -25,7 +25,6 @@ namespace Mapbox.Unity.Map
 
         [SerializeField] private bool _initializeOnStart = true;
         [SerializeField] protected ImageryLayer _imagery = new ImageryLayer();
-        [SerializeField] protected VectorLayer _vectorData = new VectorLayer();
         [SerializeField] protected AbstractTileProvider _tileProvider;
         [SerializeField] protected HashSet<UnwrappedTileId> _currentExtent;
         private List<UnwrappedTileId> tilesToProcess;
@@ -428,10 +427,6 @@ namespace Mapbox.Unity.Map
         public void DisableEditorPreview()
         {
             _imagery.UpdateLayer -= OnImageOrTerrainUpdateLayer;
-            _vectorData.SubLayerRemoved -= OnVectorDataSubLayerRemoved;
-            _vectorData.SubLayerAdded -= OnVectorDataSubLayerAdded;
-            _vectorData.UpdateLayer -= OnVectorDataUpdateLayer;
-            _vectorData.UnbindAllEvents();
             if (_mapVisualizer != null)
             {
                 _mapVisualizer.ClearMap();
@@ -464,14 +459,6 @@ namespace Mapbox.Unity.Map
             _elevationFactory = ScriptableObject.CreateInstance<TerrainFactoryBase>();
             SetTileProvider();
             _imagery.Initialize();
-
-
-            if (_vectorData == null)
-            {
-                _vectorData = new VectorLayer();
-            }
-            _vectorData.Initialize();
-
             _mapVisualizer.Factories = new List<AbstractTileFactory>
             {
                 _elevationFactory,
@@ -515,11 +502,6 @@ namespace Mapbox.Unity.Map
             SetUpScaling();
             //Set up events for changes.
             _imagery.UpdateLayer += OnImageOrTerrainUpdateLayer;
-
-            _vectorData.SubLayerRemoved += OnVectorDataSubLayerRemoved;
-            _vectorData.SubLayerAdded += OnVectorDataSubLayerAdded;
-            _vectorData.UpdateLayer += OnVectorDataUpdateLayer;
-
             _mapVisualizer.Initialize(this);
             TileProvider.Initialize(this);
             SendInitialized();
@@ -631,9 +613,7 @@ namespace Mapbox.Unity.Map
 
         private void RedrawVectorDataLayer()
         {
-            _mapVisualizer.UnregisterTilesFrom(_vectorData.Factory);
-            _vectorData.UnbindAllEvents();
-            _mapVisualizer.ReregisterTilesTo(_vectorData.Factory);
+            
         }
 
         private void OnVectorDataSubLayerRemoved(object sender, EventArgs eventArgs)

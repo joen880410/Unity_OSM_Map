@@ -9,10 +9,8 @@ namespace Mapbox.Platform.Cache
 	/// <summary>
 	/// Don't change the class name: sqlite-net uses it for table creation
 	/// </summary>
-	public class tiles
+	public class Tiles
 	{
-
-		public int tile_set { get; set; }
 
 		//hrmpf: multiple PKs not supported by sqlite.net
 		//https://github.com/praeclarum/sqlite-net/issues/282

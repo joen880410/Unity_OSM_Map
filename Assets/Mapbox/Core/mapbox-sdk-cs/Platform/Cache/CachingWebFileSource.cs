@@ -115,17 +115,12 @@
 		)
 		{
 
-			if (string.IsNullOrEmpty(tilesetId))
-			{
-				throw new Exception("Cannot cache without a tileset id");
-			}
-
 			CacheItem cachedItem = null;
 
 			// go through existing caches and check if we already have the requested tile available
 			foreach (var cache in _caches)
 			{
-				cachedItem = cache.Get(tilesetId, tileId);
+				cachedItem = cache.Get(tileId);
 				if (null != cachedItem)
 				{
 					break;
@@ -179,7 +174,7 @@
 							{
 								foreach (var cache in _caches)
 								{
-									cache.Add(tilesetId, tileId, cachedItem, false);
+									cache.Add(tileId, cachedItem, false);
 								}
 							}
 							else
@@ -248,9 +243,7 @@
 						// propagate to all caches forcing update
 						foreach (var cache in _caches)
 						{
-							cache.Add(
-								tilesetId
-								, tileId
+							cache.Add(tileId
 								, new CacheItem()
 								{
 									Data = r.Data,

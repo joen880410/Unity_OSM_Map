@@ -86,17 +86,8 @@ namespace Mapbox.Unity
         {
             _fileSource = new CachingWebFileSource( _configuration.AutoRefreshCache)
                 .AddCache(new MemoryCache(_configuration.MemoryCacheSize))
-#if !UNITY_WEBGL
                 .AddCache(new SQLiteCache(_configuration.FileCacheSize))
-#endif
                 ;
-        }
-
-
-        public void SetLocationCollectionState(bool enable)
-        {
-            PlayerPrefs.SetInt(Constants.Path.SHOULD_COLLECT_LOCATION_KEY, (enable ? 1 : 0));
-            PlayerPrefs.Save();
         }
 
         /// <summary>
