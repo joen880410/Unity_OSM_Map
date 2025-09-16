@@ -350,56 +350,6 @@ namespace Mapbox.Unity.Map
 			}
 		}
 
-		public void UnregisterTilesFrom(AbstractTileFactory factory)
-		{
-			foreach (KeyValuePair<UnwrappedTileId, UnityTile> tileBundle in _activeTiles)
-			{
-				factory.Unregister(tileBundle.Value);
-			}
-		}
-
-		public void UnregisterAndRedrawTilesFromLayer(VectorTileFactory factory, LayerVisualizerBase layerVisualizer)
-		{
-			foreach (KeyValuePair<UnwrappedTileId, UnityTile> tileBundle in _activeTiles)
-			{
-				factory.UnregisterLayer(tileBundle.Value, layerVisualizer);
-			}
-			layerVisualizer.Clear();
-			layerVisualizer.UnbindSubLayerEvents();
-			layerVisualizer.SetProperties(layerVisualizer.SubLayerProperties);
-			layerVisualizer.InitializeStack();
-			foreach (KeyValuePair<UnwrappedTileId, UnityTile> tileBundle in _activeTiles)
-			{
-				factory.RedrawSubLayer(tileBundle.Value, layerVisualizer);
-			}
-		}
-
-		public void RemoveTilesFromLayer(VectorTileFactory factory, LayerVisualizerBase layerVisualizer)
-		{
-			foreach (KeyValuePair<UnwrappedTileId, UnityTile> tileBundle in _activeTiles)
-			{
-				factory.UnregisterLayer(tileBundle.Value, layerVisualizer);
-			}
-			factory.RemoveVectorLayerVisualizer(layerVisualizer);
-		}
-
-		public void ReregisterTilesTo(VectorTileFactory factory)
-		{
-			foreach (KeyValuePair<UnwrappedTileId, UnityTile> tileBundle in _activeTiles)
-			{
-				factory.Register(tileBundle.Value);
-			}
-		}
-
-		public void UpdateTileForProperty(AbstractTileFactory factory, LayerUpdateArgs updateArgs)
-		{
-			foreach (KeyValuePair<UnwrappedTileId, UnityTile> tileBundle in _activeTiles)
-			{
-				factory.UpdateTileProperty(tileBundle.Value, updateArgs);
-			}
-		}
-
-
 		#region Events
 		/// <summary>
 		/// The  <c>OnTileError</c> event triggers when there's a <c>Tile</c> error.
