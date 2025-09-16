@@ -20,7 +20,6 @@ namespace Mapbox.Unity.MeshGeneration.Data
         private Texture2D _rasterData;
         public VectorTile VectorData { get; private set; }
         private Texture2D _heightTexture;
-        public float[] HeightData;
 
         private Texture2D _loadingTexture;
         //keeping track of tile objects to be able to cancel them safely if tile is destroyed before data fetching finishes
@@ -233,57 +232,6 @@ namespace Mapbox.Unity.MeshGeneration.Data
             _tiles.Clear();
         }
 
-        public void SetHeightData(byte[] data, float heightMultiplier = 1f, bool useRelative = false, bool addCollider = false)
-        {
-            if (HeightDataState != TilePropertyState.Unregistered)
-            {
-                //reset height data
-                if (data == null)
-                {
-                    HeightData = new float[256 * 256];
-                    HeightDataState = TilePropertyState.None;
-                    return;
-                }
-
-                // HACK: compute height values for terrain. We could probably do this without a texture2d.
-                if (_heightTexture == null)
-                {
-                    _heightTexture = new Texture2D(0, 0);
-                }
-
-                _heightTexture.LoadImage(data);
-                byte[] rgbData = _heightTexture.GetRawTextureData();
-
-                // Get rid of this temporary texture. We don't need to bloat memory.
-                _heightTexture.LoadImage(null);
-
-                if (HeightData == null)
-                {
-                    HeightData = new float[256 * 256];
-                }
-
-                var relativeScale = useRelative ? _relativeScale : 1f;
-                for (int xx = 0; xx < 256; ++xx)
-                {
-                    for (int yy = 0; yy < 256; ++yy)
-                    {
-                        float r = rgbData[(xx * 256 + yy) * 4 + 1];
-                        float g = rgbData[(xx * 256 + yy) * 4 + 2];
-                        float b = rgbData[(xx * 256 + yy) * 4 + 3];
-                        //the formula below is the same as Conversions.GetAbsoluteHeightFromColor but it's inlined for performance
-                        HeightData[xx * 256 + yy] = relativeScale * heightMultiplier * (-10000f + ((r * 65536f + g * 256f + b) * 0.1f));
-                    }
-                }
-
-                if (addCollider && gameObject.GetComponent<MeshCollider>() == null)
-                {
-                    gameObject.AddComponent<MeshCollider>();
-                }
-
-                HeightDataState = TilePropertyState.Loaded;
-            }
-        }
-
         public void SetRasterData(byte[] data, bool useMipMap = true, bool useCompression = false)
         {
             // Don't leak the texture, just reuse it.
@@ -313,50 +261,6 @@ namespace Mapbox.Unity.MeshGeneration.Data
 
                 RasterDataState = TilePropertyState.Loaded;
             }
-        }
-
-        public void SetVectorData(VectorTile vectorTile)
-        {
-            if (VectorDataState != TilePropertyState.Unregistered)
-            {
-                VectorData = vectorTile;
-            }
-        }
-
-        /// <summary>
-        /// Method to query elevation data in any point in the tile using [0-1] range inputs.
-        /// Input values are clamped for safety and QueryHeightDataNonclamped method should be used for
-        /// higher performance usage.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public float QueryHeightData(float x, float y)
-        {
-            if (HeightData != null)
-            {
-                return HeightData[(int)(Mathf.Clamp01(y) * 255) * 256 + (int)(Mathf.Clamp01(x) * 255)] * _tileScale;
-            }
-
-            return 0;
-        }
-
-        /// <summary>
-        ///  Method to query elevation data in any point in the tile using [0-1] range inputs.
-        /// Input values aren't clamped for improved performance and assuring they are in [0-1] range
-        /// is left to caller.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public float QueryHeightDataNonclamped(float x, float y)
-        {
-            if (HeightData != null)
-            {
-                return HeightData[(int)(y * 255) * 256 + (int)(x * 255)] * _tileScale;
-            }
-
-            return 0;
         }
 
         public void SetLoadingTexture(Texture2D texture)

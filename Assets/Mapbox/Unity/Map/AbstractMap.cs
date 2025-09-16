@@ -587,7 +587,7 @@ namespace Mapbox.Unity.Map
             {
                 tileScale = tile.TileScale;
                 var _rect = tile.Rect;
-                return tile.QueryHeightData((float)((_meters - _rect.Min).x / _rect.Size.x), (float)((_meters.y - _rect.Max.y) / _rect.Size.y));
+                return 0f;
             }
             else
             {

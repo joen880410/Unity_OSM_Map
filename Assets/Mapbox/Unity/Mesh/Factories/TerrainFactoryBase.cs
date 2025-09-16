@@ -44,7 +44,6 @@ namespace Mapbox.Unity.MeshGeneration.Factories
         protected override void OnRegistered(UnityTile tile)
         {
             //reseting height data
-            tile.SetHeightData(null);
             Strategy.RegisterTile(tile);
             tile.HeightDataState = TilePropertyState.Loaded;
         }
@@ -87,7 +86,6 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
                 if (tile.HeightDataState != TilePropertyState.Unregistered)
                 {
-                    tile.SetHeightData(pngRasterTile.Data, _elevationOptions.requiredOptions.exaggerationFactor, _elevationOptions.modificationOptions.useRelativeHeight, _elevationOptions.colliderOptions.addCollider);
                     Strategy.RegisterTile(tile);
                 }
             }
