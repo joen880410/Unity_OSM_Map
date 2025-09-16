@@ -1,14 +1,10 @@
 ﻿namespace Mapbox.Editor
 {
-	using UnityEngine;
-	using System;
-	using System.Collections;
-	using UnityEditor;
-	using Mapbox.Unity.Map;
-	using Mapbox.Editor;
-	using Mapbox.Unity.MeshGeneration.Modifiers;
+    using UnityEngine;
+    using UnityEditor;
+    using Mapbox.Unity.Map;
 
-	public class ModelingSectionDrawer
+    public class ModelingSectionDrawer
 	{
 		private string objectId = "";
 		bool showModeling

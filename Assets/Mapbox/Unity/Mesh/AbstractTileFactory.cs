@@ -33,12 +33,12 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 	public abstract class AbstractTileFactory : ScriptableObject
 	{
 
-		protected LayerProperties _options;
+		protected MapboxDataProperty _options;
 
 		protected HashSet<UnityTile> _tilesWaitingResponse;
 		protected HashSet<UnityTile> _tilesWaitingProcessing;
 
-		public virtual void SetOptions(LayerProperties options)
+		public virtual void SetOptions(MapboxDataProperty options)
 		{
 			_options = options;
 		}

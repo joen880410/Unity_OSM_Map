@@ -25,7 +25,7 @@ namespace Mapbox.Unity.Map
 
         [SerializeField] private bool _initializeOnStart = true;
         [SerializeField] protected ImageryLayer _imagery = new ImageryLayer();
-        [SerializeField] protected AbstractTileProvider _tileProvider;
+        [SerializeField] protected QuadTreeTileProvider _tileProvider;
         [SerializeField] protected HashSet<UnwrappedTileId> _currentExtent;
         private List<UnwrappedTileId> tilesToProcess;
 
@@ -60,8 +60,7 @@ namespace Mapbox.Unity.Map
         [Tooltip("The zoom level of the map")]
         public float zoom = 4.0f;
         #endregion
-
-        public MapExtentOptions extentOptions = new MapExtentOptions(MapExtentType.RangeAroundCenter);
+        public CameraBoundsTileProviderOptions cameraBoundsOptions = new CameraBoundsTileProviderOptions();
         [Tooltip("Texture used while tiles are loading.")]
         public Texture2D loadingTexture = null;
         public Material tileMaterial = null;
@@ -88,7 +87,7 @@ namespace Mapbox.Unity.Map
             }
         }
 
-        public AbstractTileProvider TileProvider
+        public QuadTreeTileProvider TileProvider
         {
             get
             {
@@ -199,18 +198,6 @@ namespace Mapbox.Unity.Map
         /// Setting to trigger map initialization in Unity's Start method.
         /// if set to false, Initialize method should be called explicitly to initialize the map.
         /// </summary>
-        public bool InitializeOnStart
-        {
-            get
-            {
-                return _initializeOnStart;
-            }
-            set
-            {
-                _initializeOnStart = value;
-            }
-        }
-
         public HashSet<UnwrappedTileId> CurrentExtent
         {
             get
@@ -240,14 +227,6 @@ namespace Mapbox.Unity.Map
             get
             {
                 return tileMaterial;
-            }
-        }
-
-        public Type ExtentCalculatorType
-        {
-            get
-            {
-                return TileProvider.GetType();
             }
         }
 
@@ -423,7 +402,6 @@ namespace Mapbox.Unity.Map
             }
         }
 
-
         public void DisableEditorPreview()
         {
             if (_mapVisualizer != null)
@@ -441,7 +419,7 @@ namespace Mapbox.Unity.Map
         public void DestroyTileProvider()
         {
             var tileProvider = TileProvider ?? gameObject.GetComponent<AbstractTileProvider>();
-            if (extentOptions.extentType != MapExtentType.Custom && tileProvider != null)
+            if (tileProvider != null)
             {
                 tileProvider.gameObject.Destroy();
                 _tileProvider = null;
@@ -508,28 +486,15 @@ namespace Mapbox.Unity.Map
 
         private void SetTileProvider()
         {
-            ITileProviderOptions tileProviderOptions = extentOptions.GetTileProviderOptions();
             string tileProviderName = "TileProvider";
             // Setup tileprovider based on type.
-            if (TileProvider != null)
-            {
-                if (!(TileProvider is QuadTreeTileProvider))
-                {
-                    TileProvider.gameObject.Destroy();
-                    var go = new GameObject(tileProviderName);
-                    go.transform.parent = transform;
-                    TileProvider = go.AddComponent<QuadTreeTileProvider>();
-                }
-            }
-            else
+            if (TileProvider == null)
             {
                 var go = new GameObject(tileProviderName);
                 go.transform.parent = transform;
                 TileProvider = go.AddComponent<QuadTreeTileProvider>();
             }
-
-            TileProvider.SetOptions(tileProviderOptions);
-
+            TileProvider.SetOptions(cameraBoundsOptions);
         }
 
         private void TriggerTileRedrawForExtent(ExtentArgs currentExtent)

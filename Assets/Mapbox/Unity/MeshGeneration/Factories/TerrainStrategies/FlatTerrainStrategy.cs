@@ -6,7 +6,14 @@ using Mapbox.Unity.Utilities;
 
 namespace Mapbox.Unity.MeshGeneration.Factories.TerrainStrategies
 {
-	public class FlatTerrainStrategy : TerrainStrategy
+    public class MeshDataArray
+    {
+        public Vector3[] Vertices;
+        public Vector3[] Normals;
+        public int[] Triangles;
+        public Vector2[] Uvs;
+    }
+    public class FlatTerrainStrategy : TerrainStrategy
 	{
 		MeshDataArray _cachedQuad;
 

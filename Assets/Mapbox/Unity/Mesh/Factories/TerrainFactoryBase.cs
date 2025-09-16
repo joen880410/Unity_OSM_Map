@@ -1,13 +1,9 @@
-﻿using Mapbox.Unity.MeshGeneration.Factories;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using Mapbox.Unity.MeshGeneration.Data;
 using Mapbox.Unity.Map;
 using Mapbox.Map;
 using Mapbox.Unity.MeshGeneration.Enums;
 using Mapbox.Unity.MeshGeneration.Factories.TerrainStrategies;
-using System;
-using System.Collections.Generic;
 
 namespace Mapbox.Unity.MeshGeneration.Factories
 {
@@ -18,18 +14,6 @@ namespace Mapbox.Unity.MeshGeneration.Factories
         protected ElevationLayerProperties _elevationOptions = new ElevationLayerProperties();
         protected TerrainDataFetcher DataFetcher;
 
-        public TerrainDataFetcher GetFetcher()
-        {
-            return DataFetcher;
-        }
-
-        public ElevationLayerProperties Properties
-        {
-            get
-            {
-                return _elevationOptions;
-            }
-        }
 
         #region UnityMethods
         private void OnDestroy()
@@ -51,7 +35,7 @@ namespace Mapbox.Unity.MeshGeneration.Factories
             DataFetcher.FetchingError += OnDataError;
         }
 
-        public override void SetOptions(LayerProperties options)
+        public override void SetOptions(MapboxDataProperty options)
         {
             _elevationOptions = (ElevationLayerProperties)options;
             Strategy.Initialize(_elevationOptions);

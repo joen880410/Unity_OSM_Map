@@ -1,11 +1,7 @@
 ﻿using Mapbox.Map;
 using Mapbox.Unity;
-using Mapbox.Unity.Map;
 using Mapbox.Unity.MeshGeneration.Data;
-using Mapbox.Unity.MeshGeneration.Enums;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DataFetcherParameters
@@ -13,17 +9,6 @@ public class DataFetcherParameters
 	public CanonicalTileId canonicalTileId;
 	public string tilesetId;
 	public UnityTile tile;
-}
-
-
-public class TerrainDataFetcherParameters : DataFetcherParameters
-{
-}
-
-public class VectorDataFetcherParameters : DataFetcherParameters
-{
-	public bool useOptimizedStyle = false;
-	public Style style = null;
 }
 
 public abstract class DataFetcher : ScriptableObject
@@ -46,15 +31,14 @@ public class TerrainDataFetcher : DataFetcher
 	//tile here should be totally optional and used only not to have keep a dictionary in terrain factory base
 	public override void FetchData(DataFetcherParameters parameters)
 	{
-		var terrainDataParameters = parameters as TerrainDataFetcherParameters;
-		if(terrainDataParameters == null)
+		if(parameters == null)
 		{
 			return;
 		}
 		var pngRasterTile = new RasterTile();
-		pngRasterTile.Initialize(_fileSource, terrainDataParameters.canonicalTileId, terrainDataParameters.tilesetId, () =>
+		pngRasterTile.Initialize(_fileSource, parameters.canonicalTileId, parameters.tilesetId, () =>
 		{
-			if (terrainDataParameters.tile.CanonicalTileId != pngRasterTile.Id)
+			if (parameters.tile.CanonicalTileId != pngRasterTile.Id)
 			{
 				//this means tile object is recycled and reused. Returned data doesn't belong to this tile but probably the previous one. So we're trashing it.
 				return;
@@ -62,11 +46,11 @@ public class TerrainDataFetcher : DataFetcher
 
 			if (pngRasterTile.HasError)
 			{
-				FetchingError(terrainDataParameters.tile, pngRasterTile, new TileErrorEventArgs(terrainDataParameters.canonicalTileId, pngRasterTile.GetType(), null, pngRasterTile.Exceptions));
+                FetchingError(parameters.tile, pngRasterTile, new TileErrorEventArgs(parameters.canonicalTileId, pngRasterTile.GetType(), null, pngRasterTile.Exceptions));
 			}
 			else
 			{
-				DataRecieved(terrainDataParameters.tile, pngRasterTile);
+                DataRecieved(parameters.tile, pngRasterTile);
 			}
 		});
 	}
